@@ -1,0 +1,15 @@
+{
+  "name": "mynode",
+  "version": "1.0.0",
+  "description": "- open source server environment.\r - JavaScript on the server.\r - Node.js is a very powerful JavaScript-based platform built on Google Chrome's JavaScript V8 Engine",
+  "main": "index.js",
+  "scripts": {
+    "start": "node my",
+    "watch":"nodemon my"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
