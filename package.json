@@ -4,12 +4,14 @@
   "description": "- open source server environment.\r - JavaScript on the server.\r - Node.js is a very powerful JavaScript-based platform built on Google Chrome's JavaScript V8 Engine",
   "main": "index.js",
   "scripts": {
-    "start": "node my",
-    "watch":"nodemon my"
+    "start": "node myexpress",
+    "watch": "nodemon myexpress"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
     "nodemon": "^2.0.12"
   }
 }
