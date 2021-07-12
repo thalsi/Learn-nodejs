@@ -1,19 +1,23 @@
 const express = require('express');
 const app = express();
 var bodyParser = require('body-parser')
-const fs = require('fs');
+const cors = require('cors')
 
-const user_db=require('./user/user');
+let user_db=[{ id:1,
+    email:"alimo@gmail",
+    first_name:"ali",
+    last_name:"mon",
+    gender:"male"}]
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 app.use((req,res,next)=>{
     res.setHeader('Content-Type', 'application/json');
     next();
 })
 
-console.log(user_db);
 app.get('/get',(req,res)=>{
     // res.setHeader('Content-Type', 'application/json');
     res.status(200)
@@ -33,14 +37,17 @@ app.post('/post',(req,res)=>{
         last_name:req.body.last_name,
         gender:req.body.gender,
     }
+    console.log(user);
     user_db.push(user);
     res.json({meassge:"Psot sussfully"});
 })
 
 app.put('/put/:id',(req,res)=>{
     const id= Number.parseInt(req.params.id) ;
+    console.log(id);
     let index= user_db.findIndex(e=>{ return e.id==id})
-    if(index!=id){
+    console.log(index);
+    if(index<0){
         res.status(404)
         res.json({massage:"error not found id"})
     }else{
@@ -49,7 +56,7 @@ app.put('/put/:id',(req,res)=>{
         userData.first_name=req.body.first_name;
         userData.last_name=req.body.last_name;
     
-        res.status(400)
+        res.status(200)
         
         console.log("index-->"+index);
         res.json({message:"put sccesfully"})
@@ -61,12 +68,12 @@ app.delete('/delete/:id',(req,res)=>{
     const id= Number.parseInt(req.params.id) ;
     let index= user_db.findIndex(e=>{ return e.id==id})
 
-    if(index!=id){
+    if(!index){
         res.status(404)
         res.json({massage:"not found detete id"})
     }else{
         user_db.splice(index,1);
-        res.status(404)
+        res.status(200)
         res.json({massage:"Sussfully deleted"})
     }
 
