@@ -1,4 +1,4 @@
-[{
+const user=[{
     "id": 1,
     "first_name": "Annabela",
     "last_name": "McGannon",
@@ -59,3 +59,6 @@
     "email": "amahomet9@craigslist.org",
     "gender": "Genderfluid"
   }]
+
+
+module.exports= user;

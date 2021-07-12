@@ -3,7 +3,7 @@ const app = express();
 var bodyParser = require('body-parser')
 const fs = require('fs');
 
-const user=require('./user/user.json');
+const user_db=require('./user/user');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -13,15 +13,63 @@ app.use((req,res,next)=>{
     next();
 })
 
-console.log(user);
+console.log(user_db);
 app.get('/get',(req,res)=>{
     // res.setHeader('Content-Type', 'application/json');
     res.status(200)
-    res.end(JSON.stringify(user));
+    res.end(JSON.stringify(user_db));
 })
 
 app.post('/post',(req,res)=>{
-   console.log(req.body);
-   res.send('post seccefully');
+    if(!req.body.first_name && !req.body.last_name){
+        res.status(400);
+        return res.json({error:"requed filed are missing"})
+    }
+
+    const user={
+        id:user_db.length+1,
+        email:req.body.email,
+        first_name:req.body.first_name,
+        last_name:req.body.last_name,
+        gender:req.body.gender,
+    }
+    user_db.push(user);
+    res.json({meassge:"Psot sussfully"});
 })
+
+app.put('/put/:id',(req,res)=>{
+    const id= Number.parseInt(req.params.id) ;
+    let index= user_db.findIndex(e=>{ return e.id==id})
+    if(index!=id){
+        res.status(404)
+        res.json({massage:"error not found id"})
+    }else{
+        let userData= user_db[index];
+        userData.email=req.body.email;
+        userData.first_name=req.body.first_name;
+        userData.last_name=req.body.last_name;
+    
+        res.status(400)
+        
+        console.log("index-->"+index);
+        res.json({message:"put sccesfully"})
+    }
+    
+})
+
+app.delete('/delete/:id',(req,res)=>{
+    const id= Number.parseInt(req.params.id) ;
+    let index= user_db.findIndex(e=>{ return e.id==id})
+
+    if(index!=id){
+        res.status(404)
+        res.json({massage:"not found detete id"})
+    }else{
+        user_db.splice(index,1);
+        res.status(404)
+        res.json({massage:"Sussfully deleted"})
+    }
+
+})
+
 app.listen(3000,()=> console.log('Server running on 3000'));
