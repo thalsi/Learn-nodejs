@@ -1,13 +1,16 @@
 const express = require('express');
 const app = express();
 var bodyParser = require('body-parser')
-const cors = require('cors')
+var cors = require('cors')
+var jwt = require('jsonwebtoken');
 
 let user_db=[{ id:1,
     email:"alimo@gmail",
     first_name:"ali",
     last_name:"mon",
     gender:"male"}]
+
+let store_tokan;    
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,6 +19,49 @@ app.use(cors());
 app.use((req,res,next)=>{
     res.setHeader('Content-Type', 'application/json');
     next();
+})
+
+function generateAccessToken(username) {
+    return jwt.sign(username, "secract", { expiresIn: '1800s' });
+}
+
+function authenticateToken(req,res,next){
+
+    const bearerHeader = req.headers['authorization'];
+
+    if (bearerHeader) {
+      const bearer = bearerHeader.split(' ');
+      const bearerToken = bearer[1];
+      jwt.verify(bearerToken,"secract", (err, decode) => {
+
+        if (err) return res.sendStatus(403)
+    
+        if(decode) {
+            console.log(decode);
+            next()
+        }
+    
+    })
+    } else {
+      // Forbidden
+      res.sendStatus(403);
+      res.json({error:'tokan invalide..'})
+    }
+}
+
+app.post('/login',(req,res)=>{
+    if(req.body.username&&req.body.password){
+        res.status(200);
+        store_tokan=generateAccessToken({name:req.body.username});
+        res.json({massage:'Login sussfully..',tokan:store_tokan});
+    }else{
+        res.status(500);
+        res.json({massage:'Login faild..'})
+    }
+})
+
+app.get('/me',authenticateToken,(req,res)=>{
+    res.status(200).json({massage:"Prfoile me suffuly..."})
 })
 
 app.get('/get',(req,res)=>{
