@@ -9,10 +9,15 @@
 - npm init - npm inisalation
 - new filename.js
 - node filename
-
+## 2. npm
+1. nodemon 
+- npm packager Automatic re-running(detect changes)
+- "scripts": {
+    "start": "node fileName",
+    "watch": "nodemon fileName"
+  } 
+- npm run watch  
 ## 2. Concepts
 
 - global
 - modules
-
-## 3.
